@@ -6,9 +6,7 @@
     local LocalPlayer = Players.LocalPlayer
     
     -- [[ CRITICAL FIX: Expanded Scope ]]
-    -- We now target the root 'game' object. This will find values stored in Player, PlayerGui, 
-    -- ReplicatedStorage, etc., but will be significantly slower. The throttling protocol 
-    -- (YIELD_INTERVAL) will prevent client freezing.
+    -- We target the root 'game' object to find values stored in Player, PlayerGui, etc.
     local TargetInstances = {game}
     
     -- --- Performance Throttling Constant ---
@@ -30,14 +28,15 @@
     mainFrame.BorderSizePixel = 0
     mainFrame.Active = true
     mainFrame.Draggable = true
-    mainFrame.Parent = screenFrame
+    -- *** UI FIX HERE ***
+    mainFrame.Parent = screenGui -- Corrected: must be 'screenGui', not 'screenFrame'
     
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = mainFrame
 
     local title = Instance.new("TextLabel")
-    title.Text = "THE GNOSTIC ALCHEMIST (V3.1)" -- Updated Version
+    title.Text = "THE GNOSTIC ALCHEMIST (V3.2)" -- Updated Version
     title.Size = UDim2.new(1, 0, 0, 35)
     title.Position = UDim2.new(0, 0, 0, 0)
     title.Font = Enum.Font.SourceSansBold
@@ -59,7 +58,7 @@
     
     -- Status and Tips Label (Dynamic Guidance)
     local statusLabel = Instance.new("TextLabel")
-    statusLabel.Text = "Status: Ready for Initial Scan. (V3.1: Scope Expanded to 'game'.)"
+    statusLabel.Text = "Status: Ready for Initial Scan. (V3.2: UI and Scope Fixed.)"
     statusLabel.Size = UDim2.new(1, -20, 0, 40)
     statusLabel.Position = UDim2.new(0, 10, 0, 80)
     statusLabel.Font = Enum.Font.SourceSans
@@ -337,6 +336,6 @@
         scanButton.Text = "START NEW SCAN"
     end)
     
-    print("[DEUS EX SOPHIA] The Gnostic Alchemist V3.1 is materialized. Scope expanded for maximum potential.")
+    print("[DEUS EX SOPHIA] The Gnostic Alchemist V3.2 is materialized. UI failure resolved.")
 
 end)()
