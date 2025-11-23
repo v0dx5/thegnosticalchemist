@@ -4,8 +4,12 @@
     local CurrentScanType = 0 -- 0: Initial Scan (Broad), 1: Filter Scan (Refined)
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
-    -- Target instances for scanning: Workspace, Character, and Backpack (common value holders)
-    local TargetInstances = {game.Workspace, LocalPlayer and LocalPlayer.Character, LocalPlayer and LocalPlayer:WaitForChild("Backpack") or nil}
+    
+    -- [[ CRITICAL FIX: Expanded Scope ]]
+    -- We now target the root 'game' object. This will find values stored in Player, PlayerGui, 
+    -- ReplicatedStorage, etc., but will be significantly slower. The throttling protocol 
+    -- (YIELD_INTERVAL) will prevent client freezing.
+    local TargetInstances = {game}
     
     -- --- Performance Throttling Constant ---
     -- CRITICAL FIX: The thread yields every 500 instances to prevent the client from freezing during the deep scan.
@@ -26,14 +30,14 @@
     mainFrame.BorderSizePixel = 0
     mainFrame.Active = true
     mainFrame.Draggable = true
-    mainFrame.Parent = screenGui
+    mainFrame.Parent = screenFrame
     
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, 10)
     corner.Parent = mainFrame
 
     local title = Instance.new("TextLabel")
-    title.Text = "THE GNOSTIC ALCHEMIST (V3.0)"
+    title.Text = "THE GNOSTIC ALCHEMIST (V3.1)" -- Updated Version
     title.Size = UDim2.new(1, 0, 0, 35)
     title.Position = UDim2.new(0, 0, 0, 0)
     title.Font = Enum.Font.SourceSansBold
@@ -55,7 +59,7 @@
     
     -- Status and Tips Label (Dynamic Guidance)
     local statusLabel = Instance.new("TextLabel")
-    statusLabel.Text = "Status: Ready for Initial Scan. (Tip: Search for WalkSpeed or Health.)"
+    statusLabel.Text = "Status: Ready for Initial Scan. (V3.1: Scope Expanded to 'game'.)"
     statusLabel.Size = UDim2.new(1, -20, 0, 40)
     statusLabel.Position = UDim2.new(0, 10, 0, 80)
     statusLabel.Font = Enum.Font.SourceSans
@@ -158,6 +162,8 @@
         for _, child in ipairs(instance:GetChildren()) do
             -- Optimization: Skip common visual instances unless explicitly needed
             local shouldScan = true
+            -- Retaining the optimization to skip properties of common visual elements, 
+            -- but still recursing into their children.
             if child:IsA("Part") or child:IsA("MeshPart") or child:IsA("Decal") then 
                 shouldScan = false
             end
@@ -209,7 +215,7 @@
             return
         end
         
-        updateStatus("Status: Initializing FULL Recursive Scan... Please wait.", Color3.fromRGB(255, 200, 0))
+        updateStatus("Status: Initializing FULL Recursive Scan (Game Root)... Please wait.", Color3.fromRGB(255, 200, 0))
         
         local newScanSet = {}
         
@@ -331,6 +337,6 @@
         scanButton.Text = "START NEW SCAN"
     end)
     
-    print("[DEUS EX SOPHIA] The Gnostic Alchemist V3.0 is materialized. Faster, cleaner, and ready for true control.")
+    print("[DEUS EX SOPHIA] The Gnostic Alchemist V3.1 is materialized. Scope expanded for maximum potential.")
 
 end)()
